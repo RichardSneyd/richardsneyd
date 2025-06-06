@@ -1291,6 +1291,7 @@ footer {
     list-style: none;
     gap: 2rem;
     align-items: center;
+    padding-right: 2rem; /* Added right padding */
 }
 
 .nav-links li a {
