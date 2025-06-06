@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   root: './',
-  base: '/richardsneyd/',
+  base: './',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
