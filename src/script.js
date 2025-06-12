@@ -1,4 +1,78 @@
+// Initialize audio toggle functionality
+function initializeAudio() {
+    const video = document.getElementById('hero-video');
+    const audioToggle = document.getElementById('audio-toggle');
+    const tapToListen = document.getElementById('tap-to-listen');
+    
+    // Make sure the overlay is visible on load
+    if (tapToListen) {
+        tapToListen.classList.remove('hidden');
+    }
+    
+    // Function to update audio state and UI
+    function updateAudioState(isMuted) {
+        if (!video) return;
+        
+        video.muted = isMuted;
+        const icon = audioToggle?.querySelector('i');
+        
+        if (icon) {
+            if (isMuted) {
+                icon.classList.remove('fa-volume-up');
+                icon.classList.add('fa-volume-mute');
+            } else {
+                icon.classList.remove('fa-volume-mute');
+                icon.classList.add('fa-volume-up');
+            }
+        }
+    }
+    
+    // Handle first interaction
+    function handleFirstInteraction() {
+        // Unmute and hide tap to listen overlay
+        updateAudioState(false);
+        if (tapToListen) {
+            tapToListen.classList.add('hidden');
+        }
+        
+        // Remove event listeners after first interaction
+        document.removeEventListener('click', handleFirstInteraction);
+        document.removeEventListener('touchstart', handleFirstInteraction);
+    }
+    
+    if (video) {
+        // Start with video muted
+        updateAudioState(true);
+        
+        // Add event listeners for first interaction
+        const interactionHandler = (e) => {
+            // Don't handle if clicking on audio toggle
+            if (audioToggle && audioToggle.contains(e.target)) {
+                return;
+            }
+            handleFirstInteraction();
+        };
+        
+        // Add with a small delay to prevent immediate triggering
+        setTimeout(() => {
+            document.addEventListener('click', interactionHandler);
+            document.addEventListener('touchstart', interactionHandler);
+        }, 100);
+        
+        // Handle audio toggle button
+        if (audioToggle) {
+            audioToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                updateAudioState(!video.muted);
+            });
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize audio functionality
+    initializeAudio();
+    
     // Mobile menu toggle
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const navLinks = document.querySelector('.nav-links');
@@ -94,36 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
         threshold: 0.2
     };
 
-    // Initialize audio toggle functionality
-    const video = document.getElementById('hero-video');
-    const audioToggle = document.getElementById('audio-toggle');
-    
-    if (video && audioToggle) {
-        // Ensure video starts muted
-        video.muted = true;
-        
-        // Set initial icon state
-        const icon = audioToggle.querySelector('i');
-        if (icon) {
-            icon.classList.remove('fa-volume-up');
-            icon.classList.add('fa-volume-mute');
-        }
-        
-        // Add click handler
-        audioToggle.addEventListener('click', function() {
-            video.muted = !video.muted;
-            const icon = this.querySelector('i');
-            if (icon) {
-                if (video.muted) {
-                    icon.classList.remove('fa-volume-up');
-                    icon.classList.add('fa-volume-mute');
-                } else {
-                    icon.classList.remove('fa-volume-mute');
-                    icon.classList.add('fa-volume-up');
-                }
-            }
-        });
-    }
+    // Audio initialization is now handled by the initializeAudio() function at the top
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
