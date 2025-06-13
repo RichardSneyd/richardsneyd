@@ -3,11 +3,8 @@ function initializeAudio() {
     const video = document.getElementById('hero-video');
     const audioToggle = document.getElementById('audio-toggle');
     const tapToListen = document.getElementById('tap-to-listen');
-    
-    // Make sure the overlay is visible on load
-    if (tapToListen) {
-        tapToListen.classList.remove('hidden');
-    }
+    let hasHandledFirstInteraction = false;
+    let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
     // Function to update audio state and UI
     function updateAudioState(isMuted) {
@@ -28,44 +25,133 @@ function initializeAudio() {
     }
     
     // Handle first interaction
-    function handleFirstInteraction() {
-        // Unmute and hide tap to listen overlay
-        updateAudioState(false);
+    async function handleFirstInteraction(e) {
+        // If we've already handled the first interaction, just return
+        if (hasHandledFirstInteraction) {
+            return;
+        }
+        
+        console.log('Handling first interaction');
+        hasHandledFirstInteraction = true;
+        
+        // Hide the overlay if it exists
         if (tapToListen) {
+            tapToListen.style.display = 'none';
             tapToListen.classList.add('hidden');
         }
         
-        // Remove event listeners after first interaction
-        document.removeEventListener('click', handleFirstInteraction);
-        document.removeEventListener('touchstart', handleFirstInteraction);
+        // Function to attempt video playback
+        const attemptPlay = async () => {
+            try {
+                console.log('Attempting to play video...');
+                
+                // On mobile, we need to ensure the video is loaded first
+                if (isMobile) {
+                    video.load();
+                    await new Promise(resolve => {
+                        video.addEventListener('loadedmetadata', resolve, { once: true });
+                    });
+                }
+                
+                // Ensure video is at the beginning
+                video.currentTime = 0;
+                
+                // On mobile, we need to keep the video muted initially
+                if (isMobile) {
+                    video.muted = true;
+                    await video.play();
+                    // Then unmute after play starts
+                    video.muted = false;
+                } else {
+                    // On desktop, we can unmute and play directly
+                    video.muted = false;
+                    await video.play();
+                }
+                
+                console.log('Video playback started successfully');
+                updateAudioState(false);
+                return true;
+                
+            } catch (error) {
+                console.error('Video play error:', error);
+                return false;
+            }
+        };
+        
+        // Try to play the video
+        let playbackSuccess = await attemptPlay();
+        
+        // On mobile, try one more time with a different approach if first attempt fails
+        if (isMobile && !playbackSuccess) {
+            console.log('Retrying with alternative playback method...');
+            await attemptPlay();
+        }
     }
     
     if (video) {
-        // Start with video muted
-        updateAudioState(true);
+        console.log('Video element found, initializing...');
         
-        // Add event listeners for first interaction
-        const interactionHandler = (e) => {
-            // Don't handle if clicking on audio toggle
-            if (audioToggle && audioToggle.contains(e.target)) {
-                return;
-            }
-            handleFirstInteraction();
-        };
+        // Start with video muted and paused
+        video.muted = true;
+        video.pause();
+        video.currentTime = 0;
         
-        // Add with a small delay to prevent immediate triggering
-        setTimeout(() => {
-            document.addEventListener('click', interactionHandler);
-            document.addEventListener('touchstart', interactionHandler);
-        }, 100);
+        // Set up tap to listen overlay
+        if (tapToListen) {
+            console.log('Setting up tap to listen overlay');
+            tapToListen.style.display = 'flex';
+            tapToListen.classList.remove('hidden');
+        }
         
-        // Handle audio toggle button
+        function addFirstInteractionListener(element) {
+            const options = { passive: false };
+            const handler = (e) => {
+                // Only call preventDefault if we're actually going to handle the event
+                if (!hasHandledFirstInteraction && (!audioToggle || !audioToggle.contains(e.target))) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleFirstInteraction(e);
+                }
+            };
+            
+            // Add both touch and mouse events
+            element.addEventListener('touchstart', handler, options);
+            element.addEventListener('click', handler, { ...options, once: true });
+            
+            // Return cleanup function
+            return () => {
+                element.removeEventListener('touchstart', handler, options);
+                element.removeEventListener('click', handler, { ...options, once: true });
+            };
+        }
+        
+        // Add first interaction listeners
+        const cleanupVideo = addFirstInteractionListener(video);
+        
+        // Also add to the tap-to-listen overlay if it exists
+        let cleanupTapToListen = null;
+        if (tapToListen) {
+            cleanupTapToListen = addFirstInteractionListener(tapToListen);
+        }
+        
+        // Set up audio toggle
         if (audioToggle) {
-            audioToggle.addEventListener('click', function(e) {
+            console.log('Setting up audio toggle');
+            audioToggle.addEventListener('click', (e) => {
                 e.stopPropagation();
                 updateAudioState(!video.muted);
             });
         }
+        
+        // Debug logging
+        const events = ['play', 'playing', 'pause', 'waiting', 'error'];
+        events.forEach(event => {
+            video.addEventListener(event, (e) => console.log(`Video ${event} event`));
+        });
+        video.addEventListener('playing', () => console.log('Video playing event'));
+        video.addEventListener('pause', () => console.log('Video pause event'));
+        video.addEventListener('waiting', () => console.log('Video waiting event'));
+        video.addEventListener('error', (e) => console.error('Video error:', e));
     }
 }
 

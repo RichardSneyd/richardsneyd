@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap');
+
 :root {
     --primary-color: #2c1e1e;
     --secondary-color: #f5f5dc;
@@ -430,8 +432,6 @@ body.hero {
 .logo-image:hover {
     transform: scale(1.1);
 }
-
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap');
 
 .logo-text {
     font-family: 'Dancing Script', cursive;
