@@ -6,21 +6,60 @@ function initializeAudio() {
     let hasHandledFirstInteraction = false;
     let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
-    // Function to update audio state and UI
+    // Function to update audio state based on video state
     function updateAudioState(isMuted) {
-        if (!video) return;
+        if (!audioToggle) return;
         
-        video.muted = isMuted;
-        const icon = audioToggle?.querySelector('i');
+        const icon = audioToggle.querySelector('i');
+        if (!icon) return;
         
-        if (icon) {
+        try {
             if (isMuted) {
+                video.muted = true;
                 icon.classList.remove('fa-volume-up');
                 icon.classList.add('fa-volume-mute');
             } else {
-                icon.classList.remove('fa-volume-mute');
-                icon.classList.add('fa-volume-up');
+                // Only try to unmute if video is already playing
+                if (video.paused) {
+                    video.play().catch(e => console.warn('Play failed:', e));
+                }
+                try {
+                    video.muted = false;
+                    icon.classList.remove('fa-volume-mute');
+                    icon.classList.add('fa-volume-up');
+                } catch (e) {
+                    console.warn('Could not unmute video:', e);
+                    // If unmute fails, keep the muted state
+                    video.muted = true;
+                    icon.classList.remove('fa-volume-up');
+                    icon.classList.add('fa-volume-mute');
+                }
             }
+        } catch (e) {
+            console.error('Error updating audio state:', e);
+        }
+    }
+    
+    // Function to safely unmute the video
+    function safeUnmute() {
+        try {
+            if (video && !video.muted) return; // Already unmuted
+            
+            // Store the current time to prevent seeking
+            const currentTime = video.currentTime;
+            
+            // Unmute and update UI
+            video.muted = false;
+            updateAudioState(false);
+            
+            // Restore playback position if needed
+            if (video.currentTime !== currentTime) {
+                video.currentTime = currentTime;
+            }
+            
+            console.log('Video unmuted successfully');
+        } catch (error) {
+            console.warn('Safe unmute failed:', error);
         }
     }
     
@@ -45,31 +84,37 @@ function initializeAudio() {
             try {
                 console.log('Attempting to play video...');
                 
-                // On mobile, we need to ensure the video is loaded first
-                if (isMobile) {
-                    video.load();
-                    await new Promise(resolve => {
-                        video.addEventListener('loadedmetadata', resolve, { once: true });
-                    });
-                }
-                
                 // Ensure video is at the beginning
                 video.currentTime = 0;
                 
-                // On mobile, we need to keep the video muted initially
-                if (isMobile) {
-                    video.muted = true;
-                    await video.play();
-                    // Then unmute after play starts
-                    video.muted = false;
-                } else {
-                    // On desktop, we can unmute and play directly
-                    video.muted = false;
-                    await video.play();
+                // Always start with muted video to comply with autoplay policies
+                video.muted = true;
+                
+                // First, ensure the video is loaded
+                if (video.readyState < 3) { // HAVE_FUTURE_DATA
+                    await new Promise((resolve, reject) => {
+                        const onCanPlay = () => {
+                            video.removeEventListener('canplay', onCanPlay);
+                            resolve();
+                        };
+                        video.addEventListener('canplay', onCanPlay, { once: true });
+                    });
                 }
                 
-                console.log('Video playback started successfully');
-                updateAudioState(false);
+                // Play the video (muted)
+                await video.play();
+                console.log('Muted video playback started');
+                
+                // Schedule unmute attempt after a short delay
+                // This helps with Chrome's autoplay restrictions
+                setTimeout(() => {
+                    safeUnmute();
+                    
+                    // Try again after another short delay as a fallback
+                    setTimeout(safeUnmute, 100);
+                }, 200);
+                
+                updateAudioState(true); // Start with muted state
                 return true;
                 
             } catch (error) {
