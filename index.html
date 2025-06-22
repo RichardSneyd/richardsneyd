@@ -9,8 +9,8 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <script type="module" crossorigin src="./assets/main-0e406ed8.js"></script>
-  <link rel="stylesheet" href="./assets/index-d0dacee7.css">
+  <script type="module" crossorigin src="./assets/main-2a8b8e1b.js"></script>
+  <link rel="stylesheet" href="./assets/index-a7e1642d.css">
 </head>
 <body>
     <nav class="navbar">
@@ -28,6 +28,7 @@
             <li><a href="#music">Sample Sets</a></li>
             <li><a href="#services">Services</a></li>
             <li><a href="#contact">Contact</a></li>
+            <li class="nav-booking"><a href="https://www.gigstarter.ie/artists/richard-sneyd" target="_blank" class="booking-btn">Book Now</a></li>
         </ul>
     </nav>
 
@@ -48,9 +49,7 @@
             </div>
         </div>
         <div class="video-controls">
-            <button id="audio-toggle" class="audio-control-btn">
-                <i class="fas fa-volume-mute"></i>
-            </button>
+            <!-- Audio toggle moved to floating menu -->
         </div>
     </section>
 
@@ -72,11 +71,15 @@
         </div>
     </section>
 
-    <div class="whatsapp-float">
-        <a href="https://wa.me/353851620158" target="_blank" rel="noopener noreferrer">
+    <div class="floating-menu">
+        <button id="audio-toggle" class="floating-btn audio-control-btn">
+            <i class="fas fa-volume-mute"></i>
+        </button>
+        <a href="https://wa.me/353851620158" target="_blank" rel="noopener noreferrer" class="floating-btn whatsapp-btn">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/whatsapp.png" alt="WhatsApp">
         </a>
     </div>
+    
 
     <section id="music" class="music-section">
         <h2>Sample Sets</h2>
@@ -248,15 +251,28 @@
                             </a>
                         </div>
                     </div> -->
+                  
                 </div>
             </div>
         </div>
     </section>
     </div>
+    
     <footer>
         <p>&copy; 2025 Richard Sneyd. All rights reserved.</p>
     </footer>
 
+    
+    <script>
+        (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) return;
+          js = d.createElement(s);
+          js.id = id;
+          js.src = "//gigstarter.s3.amazonaws.com/sdk.js";
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'gigstarter-sdk'));
+      </script>
     
 </body>
 </html>
