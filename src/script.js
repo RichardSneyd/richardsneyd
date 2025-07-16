@@ -299,6 +299,79 @@ document.addEventListener('DOMContentLoaded', () => {
         threshold: 0.2
     };
 
+    // FAQ Accordion Functionality
+    const faqItems = document.querySelectorAll('.faq-item');
+    
+    if (faqItems.length > 0) {
+        // Initialize first FAQ item as open by default
+        if (faqItems[0]) {
+            faqItems[0].classList.add('active');
+        }
+        
+        // Handle FAQ item clicks
+        faqItems.forEach((item) => {
+            const question = item.querySelector('h4');
+            
+            question.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+                
+                // Close all items first
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+                
+                // Toggle current item
+                if (!isActive) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+                
+                // Handle smooth scrolling for better UX
+                if (!isActive) {
+                    setTimeout(() => {
+                        item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 100);
+                }
+            });
+            
+            // Handle keyboard navigation
+            question.setAttribute('tabindex', '0');
+            question.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    question.click();
+                }
+                
+                // Arrow key navigation between FAQ items
+                if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    const currentIndex = Array.from(faqItems).indexOf(item);
+                    let nextIndex;
+                    
+                    if (e.key === 'ArrowDown' && currentIndex < faqItems.length - 1) {
+                        nextIndex = currentIndex + 1;
+                    } else if (e.key === 'ArrowUp' && currentIndex > 0) {
+                        nextIndex = currentIndex - 1;
+                    }
+                    
+                    if (nextIndex !== undefined) {
+                        faqItems[nextIndex].querySelector('h4').focus();
+                    }
+                }
+            });
+        });
+        
+        // Close FAQ when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.faq-item')) {
+                faqItems.forEach(item => item.classList.remove('active'));
+            }
+        });
+    }
+
     // Audio initialization is now handled by the initializeAudio() function at the top
 
     const observer = new IntersectionObserver((entries) => {
