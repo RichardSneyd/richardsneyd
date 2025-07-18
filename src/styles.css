@@ -1239,6 +1239,32 @@ body.hero {
 .bio-section {
     padding: 4rem 2rem;
     background: var(--background-color);
+    position: relative;
+}
+
+/* Full width bio image container */
+.bio-image-container {
+    width: 100%;
+    margin: 1.5rem 0;
+    display: block;
+    position: relative;
+    z-index: 1;
+}
+
+.bio-image-container img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: block;
+    max-width: 100%;
+}
+
+/* Clear floats after bio content */
+.bio-content-wrapper::after {
+    content: "";
+    display: table;
+    clear: both;
 }
 
 .bio-section h2 {
@@ -1261,6 +1287,13 @@ body.hero {
     color: var(--secondary-color);
     border: 1px solid var(--grid-color);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1;
+    overflow: visible; /* Changed to allow content to flow */
+}
+
+/* Ensure text wraps nicely around the image */
+.bio-content-wrapper {
     position: relative;
     z-index: 1;
 }
@@ -1729,31 +1762,227 @@ footer {
     color: var(--accent-color);
 }
 
-.faq-item.active h4:after {
-    transform: translateY(-50%) rotate(180deg);
+.testimonials h2 {
+    font-family: 'Playfair Display', serif;
+    color: var(--accent-color);
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    position: relative;
+    padding-bottom: 1rem;
 }
 
-.faq-item div[itemprop="acceptedAnswer"] {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
-    padding: 0 1.5rem;
+.testimonials h2:after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 3px;
+    background: var(--accent-color);
+    margin: 10px auto 0;
 }
 
-.faq-item.active div[itemprop="acceptedAnswer"] {
-    max-height: 300px;
-    padding: 1.5rem;
+.testimonial-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
 }
 
-.faq-item p {
-    margin: 0;
+.testimonial {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.testimonial:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.testimonial p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
     color: var(--text-color);
-    line-height: 1.6;
-    font-size: 1rem;
+    position: relative;
+    padding: 0 1rem;
+}
+
+.testimonial p:before,
+.testimonial p:after {
+    content: '"';
+    font-size: 2.5rem;
+    color: var(--accent-color);
+    opacity: 0.5;
+    font-family: Georgia, serif;
+    line-height: 1;
+    position: absolute;
+}
+
+.testimonial p:before {
+    top: -10px;
+    left: -5px;
+}
+
+.testimonial p:after {
+    bottom: -30px;
+    right: -5px;
+}
+
+.testimonial-author {
+    font-weight: 700;
+    color: var(--accent-color);
+    font-size: 1.1rem;
+    margin-top: 1.5rem;
+    display: block;
+    text-align: right;
+}
+
+.rating {
+    color: #ffd700;
+    margin-top: 0.5rem;
+    font-size: 1.1rem;
+    text-align: right;
+}
+
+/* FAQ Section */
+.faq-section {
+    background: var(--panel-color);
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    margin-top: 2rem;
+}
+
+.faq-section h3 {
+    font-family: 'Playfair Display', serif;
+    color: var(--accent-color);
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.faq-section h3:after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: var(--accent-color);
+    margin: 10px auto 0;
+}
+
+.faq-container {
+    margin-top: 1.5rem;
+}
+
+.faq-item {
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+    .faq-item:not(:last-child) {
+        margin-bottom: 1rem;
+    }
+
+    .faq-item h4 {
+        margin: 0;
+        padding: 1.2rem 2.5rem 1.2rem 1.5rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--accent-color);
+        cursor: pointer;
+        position: relative;
+        transition: all 0.3s ease;
+        background: rgba(0, 0, 0, 0.2);
+    }
+
+    .faq-item h4:hover {
+        background: rgba(0, 0, 0, 0.3);
+    }
+
+    .faq-item h4:after {
+        content: '\f078';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        position: absolute;
+        right: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        transition: transform 0.3s ease;
+        font-size: 0.9rem;
+        color: var(--accent-color);
+    }
+
+    .faq-item.active h4:after {
+        transform: translateY(-50%) rotate(180deg);
+    }
+
+    .faq-item div[itemprop="acceptedAnswer"] {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+        opacity: 0;
+        visibility: hidden;
+        position: relative;
+        z-index: 2;
+    }
+
+    .faq-item.active div[itemprop="acceptedAnswer"] {
+        max-height: 300px;
+        padding: 1.5rem;
+    }
+
+    .faq-item p {
+        margin: 0;
+        color: var(--text-color);
+        line-height: 1.6;
+        font-size: 1rem;
+    }
+
+
+.collapsible-content.expanded {
+    max-height: 5000px; /* Adjust based on content */
+    opacity: 1;
+    visibility: visible;
+    padding-top: 1.5rem;
+    position: relative;
+    z-index: 2;
+    background: var(--panel-color);
+}
+
+/* Bio image responsive adjustments */
+.bio-image {
+    float: right;
+    margin: 0 0 1.5rem 2rem;
+    max-width: 40%;
+    shape-outside: margin-box;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+    .bio-image-container {
+        margin: 1.5rem -1rem; /* Extend to edges on mobile */
+    }
+    
+    .bio-image-container img {
+        border-radius: 0; /* Remove border radius on mobile for edge-to-edge look */
+    }
+    
+    .bio-image img {
+        margin: 0 auto;
+        max-width: 100%;
+    }
+    
     .testimonial {
         padding: 1.5rem;
     }
@@ -1767,24 +1996,67 @@ footer {
     }
 }
 
+/* Catalogue Download Section */
 .catalogue-download {
-    padding: 2rem 0;
-    background: rgba(255, 255, 255, 0.75);
+    background-color: #fff;
     border-radius: 10px;
-    margin: 2rem 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin: 2rem auto;
+    max-width: 800px;
+    text-align: center;
 }
 
 .download-container {
-    max-width: 800px;
-    margin: 0 auto;
-    text-align: center;
-    padding: 2rem;
+    color: #333;
 }
 
-.catalogue-download h3 {
-    color: var(--primary-color);
+.download-container h3 {
+    color: #2c1e1e;
     margin-bottom: 1rem;
     font-size: 1.5rem;
+}
+
+.download-container p {
+    margin-bottom: 1.5rem;
+    color: #555;
+    line-height: 1.6;
+}
+
+.download-btn {
+    display: inline-flex;
+    align-items: center;
+    background-color: #2c1e1e;
+    color: white;
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.download-btn:hover {
+    background-color: #3a2a2a;
+}
+
+.download-btn i {
+    margin-right: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .catalogue-download {
+        margin: 2rem 1rem;
+        padding: 1.5rem;
+    }
+    
+    .download-container h3 {
+        font-size: 1.3rem;
+    }
+    
+    .download-btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
 }
 
 .catalogue-download p {
