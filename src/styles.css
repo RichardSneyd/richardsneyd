@@ -1237,28 +1237,35 @@ body.hero {
 
 /* Bio Section */
 .bio-section {
-    padding: 4rem 2rem;
+    padding: 2rem 1rem;
     background: var(--background-color);
     position: relative;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-/* Full width bio image container */
-.bio-image-container {
-    width: 100%;
-    margin: 1.5rem 0;
-    display: block;
+.bio-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.bio-content {
+    background: var(--panel-color);
+    padding: 2rem;
+    border-radius: 10px;
+    color: var(--secondary-color);
+    border: 1px solid var(--grid-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.bio-content-wrapper {
     position: relative;
     z-index: 1;
 }
 
-.bio-image-container img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    display: block;
-    max-width: 100%;
-}
 
 /* Clear floats after bio content */
 .bio-content-wrapper::after {
@@ -1267,35 +1274,67 @@ body.hero {
     clear: both;
 }
 
+.inline-image {
+    float: right;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 0 1.5rem 2rem;
+    position: relative;
+    shape-outside: margin-box;
+}
+
 .bio-section h2 {
     text-align: center;
     color: var(--accent-color);
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
+    font-size: 2rem;
+    margin: 0 0 2rem 0;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     font-family: 'Playfair Display', serif;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-.bio-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    background: var(--panel-color);
-    padding: 2rem;
-    border-radius: 10px;
-    color: var(--secondary-color);
-    border: 1px solid var(--grid-color);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    position: relative;
-    z-index: 1;
-    overflow: visible; /* Changed to allow content to flow */
+/* Ensure proper text flow around image */
+.bio-text {
+    overflow: hidden;
+    color: #ffffff;
+    font-size: 1rem;
+    line-height: 1.6;
+    font-family: 'Roboto', sans-serif;
 }
 
-/* Ensure text wraps nicely around the image */
-.bio-content-wrapper {
-    position: relative;
-    z-index: 1;
+.bio-text p {
+    margin-bottom: 1.5rem;
+}
+
+/* Remove conflicting .bio-image styles */
+.bio-image {
+    /* Reset any conflicting styles */
+    position: static;
+    height: auto;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+    .bio-section {
+        padding: 1rem 0.5rem;
+    }
+    
+    .bio-content {
+        padding: 1.5rem;
+    }
+    
+    .bio-image-container {
+        float: none;
+        width: 100%;
+        max-width: 100%;
+        margin: 0 0 1.5rem 0;
+        text-align: center;
+    }
+    
+    .bio-section h2 {
+        font-size: 1.75rem;
+    }
 }
 
 .bio-content::before {
@@ -1313,8 +1352,8 @@ body.hero {
         rgba(255, 215, 0, 0.1) 20px
     );
     opacity: 0.2;
-    pointer-events: none; /* This allows clicks to pass through to elements below */
-    z-index: -1; /* This places the background behind the content */
+    pointer-events: none;
+    z-index: -1;
 }
 
 /* Ensure contact info links are clickable */
@@ -1336,6 +1375,7 @@ body.hero {
     text-decoration: underline;
 }
 
+/* Remove duplicate .bio-text styles */
 .bio-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1343,23 +1383,11 @@ body.hero {
     align-items: center;
 }
 
-.bio-text {
-    color: #ffffff;
-    font-size: 1rem;
-    line-height: 1.6;
-    font-family: 'Roboto', sans-serif;
-}
-
-.bio-text p,
+/* Remove duplicate .bio-text p styles */
 .music-card p,
 .video-card p,
 .setlist-card p {
     margin-bottom: 1rem;
-}
-
-.bio-image {
-    position: relative;
-    height: 400px;
 }
 
 .bio-photo {
@@ -1978,7 +2006,13 @@ footer {
         border-radius: 0; /* Remove border radius on mobile for edge-to-edge look */
     }
     
-    .bio-image img {
+    .bio-image-container {
+        float: none;
+        width: 100%;
+        margin: 1.5rem 0;
+    }
+    
+    .bio-image-container img {
         margin: 0 auto;
         max-width: 100%;
     }
