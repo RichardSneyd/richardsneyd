@@ -1,1 +1,2 @@
 # richardsneyd
+Full-Stack Engineer with 15+ years’ experience designing and delivering scalable applications and platforms across EdTech, SaaS, and gaming industries. Expert in JavaScript, TypeScript, Java, and C#, with strong proficiency in React.js, Node.js, and database technologies. Adept at leading teams, driving performance improvements, and mentoring developers. Passionate about creating clean, maintainable, and user-focused solutions that balance technical excellence with business goals. 
